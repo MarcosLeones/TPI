@@ -1,17 +1,49 @@
-DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS post;
 
-CREATE TABLE user (
+CREATE TABLE IF NOT EXISTS roles (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  username TEXT UNIQUE NOT NULL,
-  password TEXT NOT NULL
-);
+  descripcion TEXT NOT NULL
+) ;
 
-CREATE TABLE post (
+
+CREATE TABLE IF NOT EXISTS usuarios (
+  cuit INTEGER PRIMARY KEY,
+  usuario TEXT UNIQUE NOT NULL,
+  password TEXT NOT NULL,
+  email TEXT NOT NULL,
+  nombre TEXT NOT NULL,
+  apellido TEXT NOT NULL,
+  rol INTEGER ,
+  FOREIGN KEY (rol) REFERENCES roles (id)
+) ;
+
+
+CREATE TABLE IF NOT EXISTS productos (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  author_id INTEGER NOT NULL,
-  created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  title TEXT NOT NULL,
-  body TEXT NOT NULL,
-  FOREIGN KEY (author_id) REFERENCES user (id)
-);
+  nombre TEXT NOT NULL,
+  descripcion TEXT NOT NULL,
+  precio REAL NOT NULL,
+  iva REAL NOT NULL,
+  imagen TEXT DEFAULT NULL,
+  stock INTEGER DEFAULT NULL
+) ;
+
+/*
+CREATE TABLE ventas (
+  numero INTEGER PRIMARY KEY AUTOINCREMENT,
+  cliente INTEGER NOT NULL,
+  fecha TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (cliente) REFERENCES usuarios (id)
+) ;
+
+
+CREATE TABLE detalle_ventas (
+  numero INTEGER PRIMARY KEY,
+  item INTEGR PRIMARY KEY,
+  producto INTEGER NOT NULL,
+  cantidad INTEGER NOT NULL,
+  FOREIGN KEY (numero) REFERENCES ventas (id),
+  FOREIGN KEY (producto) REFERENCES productos (id)
+) ;
+
+
+*/

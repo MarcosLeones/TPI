@@ -6,10 +6,25 @@
 
 {% block content %}
   <form method="post">
-    <label for="username">Username</label>
-    <input name="username" id="username" required>
-    <label for="password">Password</label>
+    <label for="cuit">CUIT</label>
+    <input name="cuit" id="cuit" required>
+
+    <label for="usuario">Usuario</label>
+    <input name="usuario" id="usuario" required>
+
+    <label for="password">Contraseña</label>
     <input type="password" name="password" id="password" required>
+
+    <label for="email">Email</label>
+    <input type="email" name="email" id="email" required>
+
+    <label for="nombre">Nombre</label>
+    <input name="nombre" id="nombre" required>
+
+    <label for="apellido">Apellido</label>
+    <input name="apellido" id="apellido" required>
+
+
     <input type="submit" value="Register">
   </form>
 {% endblock %}

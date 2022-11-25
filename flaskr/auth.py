@@ -4,33 +4,44 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 from werkzeug.security import check_password_hash, generate_password_hash
-
-from flaskr.db import get_db
+from flaskr.entities import Usuario
+from flaskr.data import insert_user, get_user, get_user_by_cuit
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
-        username = request.form['username']
+        cuit = request.form['cuit']
+        usuario = request.form['usuario']
         password = request.form['password']
-        db = get_db()
+        email = request.form['email']
+        nombre  = request.form['nombre']
+        apellido = request.form['apellido']
+        rol = 1
+               
         error = None
 
-        if not username:
-            error = 'Username is required.'
+        if not cuit:
+            error = 'CUIT requerido.'
+        elif not usuario:
+            error = 'Usuario requerido.'
         elif not password:
-            error = 'Password is required.'
+            error = 'Password requerido.'
+        elif not email:
+            error = 'e-mail requerido.'
+        elif not nombre:
+            error = 'Nombre requerido.'
+        elif not apellido:
+            error = 'Apellido requerido.'
+
+        u = Usuario(cuit, usuario, password, email, nombre, apellido, rol)
 
         if error is None:
             try:
-                db.execute(
-                    "INSERT INTO user (username, password) VALUES (?, ?)",
-                    (username, generate_password_hash(password)),
-                )
-                db.commit()
-            except db.IntegrityError:
-                error = f"User {username} is already registered."
+                insert_user(u)
+            except:
+                error = 'Ha ocurrido un error'
             else:
                 return redirect(url_for("auth.login"))
 
@@ -44,12 +55,10 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        db = get_db()
-        error = None
-        user = db.execute(
-            'SELECT * FROM user WHERE username = ?', (username,)
-        ).fetchone()
 
+        user = get_user(username, password)
+
+        error = None
         if user is None:
             error = 'Incorrect username.'
         elif not check_password_hash(user['password'], password):
@@ -57,7 +66,7 @@ def login():
 
         if error is None:
             session.clear()
-            session['user_id'] = user['id']
+            session['user_id'] = user['cuit']
             return redirect(url_for('index'))
 
         flash(error)
@@ -73,9 +82,7 @@ def load_logged_in_user():
     if user_id is None:
         g.user = None
     else:
-        g.user = get_db().execute(
-            'SELECT * FROM user WHERE id = ?', (user_id,)
-        ).fetchone()
+        g.user = get_user_by_cuit(user_id)
 
 
 

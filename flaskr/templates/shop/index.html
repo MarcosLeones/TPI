@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Productos{% endblock %}</h1>
+  {% if g.user %}
+    <a class="action" href="{{ url_for('shop.create') }}">Nuevo</a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% for producto in productos %}
+    <article class="article">
+      <header>
+        <div>
+          <h1>{{ producto['nombre'] }}</h1>
+          <div class="about">$ {{ producto['precio'] }}   - cantidad disponible: {{ producto['stock'] }}</div>
+        </div>
+        
+      </header>
+      <p class="body">{{ producto['descripcion'] }}</p>
+    </article>
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+{% endblock %}
