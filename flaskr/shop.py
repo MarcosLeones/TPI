@@ -2,7 +2,7 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
 from werkzeug.exceptions import abort
-from flaskr.data import get_products, insert_product
+from flaskr.data import get_products, insert_product, get_product_by_id, update_product, delete_product
 from flaskr.auth import login_required
 from flaskr.entities import Producto
 
@@ -50,58 +50,52 @@ def create():
     return render_template('shop/create.html')
 
 
-"""
-def get_post(id, check_author=True):
-    post = get_db().execute(
-        'SELECT p.id, title, body, created, author_id, username'
-        ' FROM post p JOIN user u ON p.author_id = u.id'
-        ' WHERE p.id = ?',
-        (id,)
-    ).fetchone()
 
-    if post is None:
-        abort(404, f"Post id {id} doesn't exist.")
+def get_product(id):
+    product = get_product_by_id(id)
 
-    if check_author and post['author_id'] != g.user['id']:
-        abort(403)
+    if product is None:
+        abort(404, f"Product id {id} doesn't exist.")
 
-    return post
+    return product
 
 
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))
 @login_required
 def update(id):
-    post = get_post(id)
+    product = get_product_by_id(id)
 
     if request.method == 'POST':
-        title = request.form['title']
-        body = request.form['body']
+        nombre = request.form['nombre']
+        descripcion = request.form['descripcion']
+        precio = request.form['precio']
+        iva = request.form['iva']
+        imagen= request.form['imagen']
+        stock = request.form['stock']
         error = None
 
-        if not title:
-            error = 'Title is required.'
+        if not nombre:
+            error = 'Nombre requerido.'
+        elif not descripcion:
+            error = 'Descripción requerido.'
+        elif not precio:
+            error = 'Precio requerido.'
+        elif not iva:
+            error = 'IVA requerido.'
 
+        p = Producto(nombre=nombre, descripcion=descripcion, precio=precio, iva=iva, imagen=imagen, stock=stock)
         if error is not None:
             flash(error)
         else:
-            db = get_db()
-            db.execute(
-                'UPDATE post SET title = ?, body = ?'
-                ' WHERE id = ?',
-                (title, body, id)
-            )
-            db.commit()
-            return redirect(url_for('blog.index'))
+            update_product(p, id)
+            return redirect(url_for('shop.index'))
 
-    return render_template('blog/update.html', post=post)
+    return render_template('shop/update.html', product=product)
 
 
 @bp.route('/<int:id>/delete', methods=('POST',))
 @login_required
 def delete(id):
-    get_post(id)
-    db = get_db()
-    db.execute('DELETE FROM post WHERE id = ?', (id,))
-    db.commit()
-    return redirect(url_for('blog.index'))
-"""
+    get_product_by_id(id)
+    delete_product(id)
+    return redirect(url_for('shop.index'))

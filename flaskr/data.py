@@ -45,3 +45,26 @@ def insert_product(p):
         db.commit()
     except db.IntegrityError:
         error = f"Product is already registered."
+
+
+def get_product_by_id(id):
+    return get_db().execute(
+        'SELECT * FROM productos'
+        ' WHERE p.id = ?',
+        (id,)
+    ).fetchone()
+
+
+def update_product(p,id):
+    db = get_db()
+    db.execute(
+            'UPDATE productos SET nombre = ?, descripcion = ?, precio = ?, iva = ?, imagen = ?, stock = ?'
+            ' WHERE id = ?',
+            (p.nombre, p.descripcion, p.precio, p.iva, p.imagen, p.stock, id)
+        )
+    db.commit()
+
+def delete_product(id):
+    db = get_db()
+    db.execute('DELETE FROM productos WHERE id = ?', (id,))
+    db.commit()
