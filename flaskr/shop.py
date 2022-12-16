@@ -1,10 +1,11 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint, flash, g, redirect, render_template, request, url_for, session
 )
 from werkzeug.exceptions import abort
 from flaskr.data import get_products, insert_product, get_product_by_id, update_product, delete_product
 from flaskr.auth import login_required
-from flaskr.entities import Producto
+from flaskr.entities import Producto, Venta, DetalleVenta
+
 
 
 bp = Blueprint('shop', __name__)
@@ -98,4 +99,71 @@ def update(id):
 def delete(id):
     get_product_by_id(id)
     delete_product(id)
+    return redirect(url_for('shop.index'))
+
+
+
+@bp.route('/<int:id>/add_to_cart', methods=('GET', 'POST'))
+@login_required
+def add_to_cart(id):
+    product = get_product_by_id(id)
+
+    if request.method == 'POST':
+        cantidad = int(request.form['cantidad'])
+        error = None
+
+        if cantidad > product['stock'] or cantidad <= 0:
+            error = 'Cantidad Inválida.'
+
+        dv = DetalleVenta(producto = product['id'], cantidad = cantidad)
+        
+        if error is not None:
+            flash(error)
+        else:
+
+            subtotal = float(product['precio']) * float(product['iva']) * cantidad
+
+            detalle_actual = {"id_producto" : product['id'], "nombre" : product['nombre']
+            ,"precio" : product['precio'], "iva" : product['iva'], "cantidad": cantidad, "subtotal" : subtotal}
+
+            if 'detalles' in session:         
+                detalles = session['detalles']    
+                detalles.extend([detalle_actual])  
+                session['detalles'] = detalles
+                total = session['total']
+                total += subtotal
+                session['total'] = total
+            else:
+                session['detalles'] = [detalle_actual]
+                session['total'] = subtotal
+
+            return redirect(url_for('shop.show_cart'))
+
+    return render_template('shop/add_to_cart.html', product=product)
+
+
+@bp.route('/cart', methods=('GET', 'POST'))
+@login_required
+def show_cart():
+
+    return render_template('shop/cart.html')
+
+
+
+@bp.route('/clear_cart')
+@login_required
+def clear_cart():
+
+    session['detalles'] = []
+    session['total'] = 0
+
+    return redirect(url_for('shop.index'))
+
+
+    
+
+@bp.route('/confirm_purchase', methods=('GET', 'POST'))
+@login_required
+def confirm_purchase():
+
     return redirect(url_for('shop.index'))
