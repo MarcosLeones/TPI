@@ -2,8 +2,11 @@
 
 {% block header %}
   <h1>{% block title %}Productos{% endblock %}</h1>
-  {% if g.user %}
+  {% if g.user and g.user['rol'] == 0 %}
     <a class="action" href="{{ url_for('shop.create') }}">Nuevo</a>
+  {% endif %}
+  {% if g.user and g.user['rol'] == 1 %}
+    <a class="action" href="{{ url_for('shop.show_cart') }}">Carrito</a>
   {% endif %}
 {% endblock %}
 
@@ -15,9 +18,14 @@
           <h1>{{ producto['nombre'] }}</h1>
           <div class="about">$ {{ producto['precio'] }}   - cantidad disponible: {{ producto['stock'] }}</div>
         </div>
-        
       </header>
       <p class="body">{{ producto['descripcion'] }}</p>
+      {% if g.user['rol'] == 0 %}
+          <a class="action" href="{{ url_for('shop.update', id=producto['id']) }}">Editar</a>
+      {% endif %}
+      {% if g.user['rol'] == 1 %}
+          <a class="action" href="{{ url_for('shop.add_to_cart', id=producto['id']) }}">Sumar al carrito</a>
+      {% endif %}
     </article>
     {% if not loop.last %}
       <hr>

@@ -17,3 +17,16 @@ class Producto:
         self.iva=iva
         self.imagen=imagen
         self.stock=stock
+
+
+class Venta:
+    def __init__(self, cliente, fecha):
+        self.cliente=cliente
+        self.fecha=fecha
+        self.detalles = []
+
+class DetalleVenta:
+     def __init__(self,  producto, cantidad):
+        self.producto = producto
+        self.cantidad = cantidad
+        

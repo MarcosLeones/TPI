@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Register{% endblock %}</h1>
+  <h1>{% block title %}Registrarse{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -24,7 +24,12 @@
     <label for="apellido">Apellido</label>
     <input name="apellido" id="apellido" required>
 
+    <label for="rol">Rol:</label>
+    <select name="rol" id="rol">
+      <option value="0">Administrdor</option>
+      <option value="1">Cliente</option>
+    </select>
 
-    <input type="submit" value="Register">
+    <input type="submit" value="Registrarse">
   </form>
 {% endblock %}

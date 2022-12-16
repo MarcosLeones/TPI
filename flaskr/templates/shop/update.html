@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Editar Producto - "{{ product['nombre'] }}"{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="nombre">Nombre</label>
+    <input name="nombre" id="nombre" value="{{ request.form['nombre'] or product['nombre'] }}" required>
+    <label for="descripcion">Descripcion</label>
+    <textarea name="descripcion" id="descripcion">{{ request.form['descripcion' or post['descripcion']] }}</textarea>
+    <label for="precio">Precio</label>
+    <input name="precio" id="precio" value="{{ request.form['precio'] or product['precio']}}" required>
+    <label for="iva">IVA</label>
+    <input name="iva" id="iva" value="{{ request.form['iva'] or product['iva']}}" required>
+    <label for="imagen">Imagen</label>
+    <input name="imagen" id="imagen" value="{{ request.form['imagen'] or product['imagen']}}" required>
+    <label for="stock">Stock</label>
+    <input name="stock" id="stock" value="{{ request.form['stock'] or product['stock']}}" required>
+
+    <input type="submit" value="Gurdar">
+  </form>
+
+  <hr>
+    <form action="{{ url_for('shop.delete', id=product['id']) }}" method="post">
+      <input class="danger" type="submit" value="Eliminar" onclick="return confirm('¿Está seguro?');">
+    </form>
+{% endblock %}

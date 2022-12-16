@@ -1,8 +1,8 @@
 
-CREATE TABLE IF NOT EXISTS roles (
+/*CREATE TABLE IF NOT EXISTS roles (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   descripcion TEXT NOT NULL
-) ;
+) ;*/
 
 
 CREATE TABLE IF NOT EXISTS usuarios (
@@ -12,8 +12,8 @@ CREATE TABLE IF NOT EXISTS usuarios (
   email TEXT NOT NULL,
   nombre TEXT NOT NULL,
   apellido TEXT NOT NULL,
-  rol INTEGER ,
-  FOREIGN KEY (rol) REFERENCES roles (id)
+  rol INTEGER NOT NULL /*,
+  FOREIGN KEY (rol) REFERENCES roles (id)*/
 ) ;
 
 

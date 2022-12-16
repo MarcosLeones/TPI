@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Agreagar al carrito - "{{ product['nombre'] }}"{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <label for="stock">Stock Actual:</label>
+  <input name="stock" id="stock" value="{{ request.form['stock'] or product['stock'] }}" disabled>
+
+  <form method="post">
+    <label for="cantidad">Cantidad</label>
+    <input type="number" name="cantidad" id="cantidad" min="1" max="{{ request.form['stock'] or product['stock'] }}" required>
+
+    <input type="submit" value="Sumar al carrito">
+  </form>
+
+
+{% endblock %}

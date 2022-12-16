@@ -50,7 +50,7 @@ def insert_product(p):
 def get_product_by_id(id):
     return get_db().execute(
         'SELECT * FROM productos'
-        ' WHERE p.id = ?',
+        ' WHERE id = ?',
         (id,)
     ).fetchone()
 

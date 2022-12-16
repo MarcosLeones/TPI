@@ -18,7 +18,7 @@ def register():
         email = request.form['email']
         nombre  = request.form['nombre']
         apellido = request.form['apellido']
-        rol = 1
+        rol =  request.form['rol']
                
         error = None
 
@@ -34,6 +34,8 @@ def register():
             error = 'Nombre requerido.'
         elif not apellido:
             error = 'Apellido requerido.'
+        elif not rol:
+            error = 'Rol requerido.'
 
         u = Usuario(cuit, usuario, password, email, nombre, apellido, rol)
 
@@ -67,6 +69,7 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user['cuit']
+            
             return redirect(url_for('index'))
 
         flash(error)

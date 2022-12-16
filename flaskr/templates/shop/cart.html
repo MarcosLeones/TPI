@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Carrito de Compras{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <table>
+      <tr>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Precio Unitario</th>
+        <th>IVA</th>
+        <th>Subtotal</th>
+      </tr>
+      {% if session['detalles'] %}
+      {% for detalle in session['detalles'] %}
+        <tr>
+          <td>{{ detalle['nombre'] }}</td>
+          <td>   {{ detalle['cantidad'] }}</td>
+          <td>   {{ detalle['precio'] }}</td>
+          <td>{{ detalle['iva'] }} %</td>
+          <td>{{ detalle['subtotal'] }}</td>
+        </tr>
+      {% endfor %}
+      {% endif %}
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><b>TOTAL:</b></td>
+          <td><b>{{ session['total'] }}</b></td>
+        </tr>
+    </table>
+
+    
+
+    <a class="action" href="{{ url_for('shop.index') }}">Seguir Comprando</a>
+    <a class="action" href="{{ url_for('shop.clear_cart') }}">Vaciar Carrito</a>
+    
+
+{% endblock %}
