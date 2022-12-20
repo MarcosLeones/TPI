@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Ventas{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <table>
+      <tr>
+        <th>Fecha</th>
+        <th>Cliente</th>
+        <th>Monto Total</th>
+      </tr>
+
+      {% for venta in ventas %}
+        <tr>
+          <td>{{ venta['fecha'].strftime("%Y/%m/%d") }}   </td>
+          <td>  {{ venta['cuit'] }} - {{ venta['apellido'] }}, {{ venta['nombre'] }}    </td>
+          <td>    {{ venta['total'] }}</td>
+        </tr>
+      {% endfor %}
+
+
+    </table>
+
+    
+
+    <a class="action" href="{{ url_for('shop.index') }}">Volver</a>
+
+
+{% endblock %}

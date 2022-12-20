@@ -2,9 +2,10 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for, session
 )
 from werkzeug.exceptions import abort
-from flaskr.data import get_products, insert_product, get_product_by_id, update_product, delete_product
+from flaskr.data import get_products, insert_product, get_product_by_id, update_product, delete_product, save_sale, get_sales
 from flaskr.auth import login_required
 from flaskr.entities import Producto, Venta, DetalleVenta
+from datetime import datetime
 
 
 
@@ -115,13 +116,12 @@ def add_to_cart(id):
         if cantidad > product['stock'] or cantidad <= 0:
             error = 'Cantidad Inválida.'
 
-        dv = DetalleVenta(producto = product['id'], cantidad = cantidad)
         
         if error is not None:
             flash(error)
         else:
 
-            subtotal = float(product['precio']) * float(product['iva']) * cantidad
+            subtotal = float(product['precio']) * cantidad * ((float(product['iva']) / 100) + 1)
 
             detalle_actual = {"id_producto" : product['id'], "nombre" : product['nombre']
             ,"precio" : product['precio'], "iva" : product['iva'], "cantidad": cantidad, "subtotal" : subtotal}
@@ -162,8 +162,59 @@ def clear_cart():
 
     
 
-@bp.route('/confirm_purchase', methods=('GET', 'POST'))
+@bp.route('/confirm_purchase', methods=('POST',))
 @login_required
 def confirm_purchase():
 
-    return redirect(url_for('shop.index'))
+    error = validate_stock()
+
+    if error is not None:
+        flash(error)
+        return redirect(url_for('shop.show_cart'))
+    
+    else:
+        register_sale()
+        session['detalles'] = []
+        session['total'] = 0
+
+        return redirect(url_for('shop.index'))
+
+
+
+
+def validate_stock():
+    details = session['detalles']
+    for detail in details:
+        id = detail['id_producto']
+        quantity = detail['cantidad']
+        product = get_product(id)
+        if product['stock'] < int(quantity):
+            return 'Stock insuficiente para el artículo ' + product['nombre']
+    return None
+
+
+def register_sale():
+    venta = Venta(cliente=g.user['cuit'], fecha=datetime.now())
+    detalles = []
+    ds = session['detalles']
+    total = 0
+    item = 0
+    for d in ds:
+        item += 1
+        p = get_product(d['id_producto'])
+        producto = Producto(nombre=p['nombre'], descripcion=p['descripcion'], precio=p['precio'], iva=p['iva'], imagen=p['imagen'], stock=p['stock'])
+        detalle = DetalleVenta(item=item, producto=d['id_producto'], cantidad=d['cantidad'])
+        total += float(p['precio']) * int(d['cantidad']) * ((float(p['iva']) /100) +1)
+        venta.detalles.append(detalle)
+    venta.total = total
+    save_sale(venta)
+
+    
+@bp.route('/sales')
+@login_required
+def show_sales():
+    if g.user['rol'] == 0:
+        ventas = get_sales()
+        return render_template('shop/sales.html', ventas=ventas)
+    else:
+        return redirect(url_for('shop.index'))

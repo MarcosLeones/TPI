@@ -24,9 +24,13 @@ class Venta:
         self.cliente=cliente
         self.fecha=fecha
         self.detalles = []
+        self.total = 0
+        
 
 class DetalleVenta:
-     def __init__(self,  producto, cantidad):
+     def __init__(self, item,  producto, cantidad):
+        self.item = item
         self.producto = producto
         self.cantidad = cantidad
+        
         
