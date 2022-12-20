@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS productos (
   stock INTEGER DEFAULT NULL
 ) ;
 
-/*
+
 CREATE TABLE ventas (
   numero INTEGER PRIMARY KEY AUTOINCREMENT,
   cliente INTEGER NOT NULL,
@@ -46,4 +46,3 @@ CREATE TABLE detalle_ventas (
 ) ;
 
 
-*/
