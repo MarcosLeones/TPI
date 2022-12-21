@@ -24,4 +24,6 @@ jobs:
           pip install flask
       - name: Run tests
         run:
+          python3.8 -m venv env
+          source env/bin/activate
           python ./flaskr/tests/auth_test.py
