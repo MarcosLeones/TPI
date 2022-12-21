@@ -1,9 +1,5 @@
-# from sys import path
-# for fp in path:
-#   print(fp)
 
-from flaskr.entities import Usuario
-
+from entities import Usuario
 def test_usuario():
   """
   GIVEN el modelo de usuario

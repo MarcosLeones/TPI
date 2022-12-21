@@ -68,3 +68,37 @@ def delete_product(id):
     db = get_db()
     db.execute('DELETE FROM productos WHERE id = ?', (id,))
     db.commit()
+
+
+def save_sale(sale):
+    db = get_db()
+    #Guardar cabecera de venta
+    cursor = db.execute(
+            "INSERT INTO ventas (cliente, fecha, total) VALUES (?, ?, ?)",
+            (sale.cliente, sale.fecha, sale.total)
+        )
+    #db.commit()
+    
+    sale_number = cursor.lastrowid
+
+    #Guardar detalles de venta
+    insert = "INSERT INTO detalle_ventas (numero, item, producto, cantidad) VALUES "
+    for detail in sale.detalles:
+        insert += " (" + str(sale_number) + ", " + str(detail.item) + ", " + str(detail.producto) + ", " + str(detail.cantidad) + "),"   
+    insert = insert[:-1]
+    db.execute(insert)
+    #db.commit()
+
+    #Actualizar stock de productos
+    for detail in sale.detalles:
+        update = "UPDATE productos SET stock = stock - " + str(detail.cantidad) + " WHERE id = " + str(detail.producto)  
+        print(update)
+        db.execute(update)
+    
+    db.commit()
+
+
+def get_sales():
+    return get_db().execute(
+        'SELECT v.fecha as fecha, v.total as total, u.cuit as cuit, u.nombre as nombre, u.apellido as apellido FROM ventas v INNER JOIN usuarios u ON v.cliente = u.cuit'
+    ).fetchall()

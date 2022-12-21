@@ -36,7 +36,11 @@
     
 
     <a class="action" href="{{ url_for('shop.index') }}">Seguir Comprando</a>
+    <br/>
     <a class="action" href="{{ url_for('shop.clear_cart') }}">Vaciar Carrito</a>
     
+    <form action="{{ url_for('shop.confirm_purchase') }}" method="post">
+      <input type="submit" value="Confirmar Compra" onclick="return confirm('¿Está seguro?');">
+    </form>
 
 {% endblock %}

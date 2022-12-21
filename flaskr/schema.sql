@@ -27,23 +27,24 @@ CREATE TABLE IF NOT EXISTS productos (
   stock INTEGER DEFAULT NULL
 ) ;
 
-/*
-CREATE TABLE ventas (
+
+CREATE TABLE IF NOT EXISTS ventas (
   numero INTEGER PRIMARY KEY AUTOINCREMENT,
   cliente INTEGER NOT NULL,
   fecha TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  total REAL,
   FOREIGN KEY (cliente) REFERENCES usuarios (id)
 ) ;
 
 
-CREATE TABLE detalle_ventas (
-  numero INTEGER PRIMARY KEY,
-  item INTEGR PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS detalle_ventas (
+  numero INTEGER NOT NULL,
+  item INTEGER NOT NULL,
   producto INTEGER NOT NULL,
   cantidad INTEGER NOT NULL,
   FOREIGN KEY (numero) REFERENCES ventas (id),
-  FOREIGN KEY (producto) REFERENCES productos (id)
+  FOREIGN KEY (producto) REFERENCES productos (id),
+  PRIMARY KEY (numero, item)
 ) ;
 
 
-*/

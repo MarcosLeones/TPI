@@ -24,4 +24,4 @@ jobs:
           pip install flask
       - name: Run tests
         run:
-          python ./flaskr/tests/auth_test.py
+          python3 ./flaskr/auth_test.py
