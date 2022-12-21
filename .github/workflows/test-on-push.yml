@@ -23,4 +23,5 @@ jobs:
           echo "Entorno virtual activado:" $VIRTUAL_ENV
           pip install flask
       - name: Run tests
-        run: echo 'Tests ejecutados'
+        run:
+          python ./flaskr/tests/auth_test.py
