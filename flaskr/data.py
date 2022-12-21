@@ -102,3 +102,14 @@ def get_sales():
     return get_db().execute(
         'SELECT v.fecha as fecha, v.total as total, u.cuit as cuit, u.nombre as nombre, u.apellido as apellido FROM ventas v INNER JOIN usuarios u ON v.cliente = u.cuit'
     ).fetchall()
+
+
+def get_sales_by_user(cuit):
+    return get_db().execute(
+        ' SELECT v.numero as numero, v.fecha as fecha, p.nombre as producto, p.precio as precio, dv.cantidad as cantidad, (dv.cantidad * p.precio) as subtotal, v.total as total '
+        + ' FROM ventas v '
+        + ' INNER JOIN  detalle_ventas dv on v.numero = dv.numero ' 
+        + ' INNER JOIN productos p on dv.producto = p.id '
+        + ' WHERE v.cliente = ' + str(cuit)
+        + ' ORDER BY v.numero '
+    ).fetchall()
