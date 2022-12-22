@@ -9,6 +9,11 @@ from flaskr.data import insert_user, get_user, get_user_by_cuit
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
+
+@bp.route('/hello', methods=['GET']) #Piloto test
+def hello_world():
+    return 'Hello, World!'
+
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
