@@ -6,5 +6,5 @@ def test_config():
 
 
 def test_hello(client):
-    response = client.get('/auth/hello')
+    response = client.get('/auth/hello') # Vista dummy testeo
     assert response.data == b'Hello, World!'
