@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Mis Compras{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+    <table>
+      <tr>
+        <th>  Fecha   </th>
+        <th>  Producto   </th>
+        <th>     Precio</th>
+        <th>     Cantidad</th>
+        <th>     Subtotal</th>
+      </tr>
+      {% for compra in compras %}
+        <tr>
+          <td>{{ compra['fecha'].strftime("%Y/%m/%d") }}   </td>
+          <td>    {{ compra['producto'] }}   </td>
+          <td>    {{ compra['precio'] }}    </td>
+          <td>    {{ compra['cantidad'] }}    </td>
+          <td>    {{ compra['subtotal'] }}</td>
+        </tr>
+      {% endfor %}
+
+
+    </table>
+
+    
+
+    <a class="action" href="{{ url_for('shop.index') }}">Volver</a>
+
+
+{% endblock %}

@@ -2,7 +2,7 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for, session
 )
 from werkzeug.exceptions import abort
-from flaskr.data import get_products, insert_product, get_product_by_id, update_product, delete_product, save_sale, get_sales
+from flaskr.data import get_products, insert_product, get_product_by_id, update_product, delete_product, save_sale, get_sales, get_sales_by_user
 from flaskr.auth import login_required
 from flaskr.entities import Producto, Venta, DetalleVenta
 from datetime import datetime
@@ -216,5 +216,15 @@ def show_sales():
     if g.user['rol'] == 0:
         ventas = get_sales()
         return render_template('shop/sales.html', ventas=ventas)
+    else:
+        return redirect(url_for('shop.index'))
+
+
+@bp.route('/purchases')
+@login_required
+def show_purchases():
+    if g.user['rol'] == 1:
+        compras = get_sales_by_user(g.user['cuit'])
+        return render_template('shop/purchases.html', compras=compras)
     else:
         return redirect(url_for('shop.index'))

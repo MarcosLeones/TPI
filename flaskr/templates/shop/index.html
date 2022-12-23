@@ -7,6 +7,7 @@
   {% endif %}
   {% if g.user and g.user['rol'] == 1 %}
     <a class="action" href="{{ url_for('shop.show_cart') }}">Carrito</a>
+    <a class="action" href="{{ url_for('shop.show_purchases') }}">Mis Compras</a>
   {% endif %}
 {% endblock %}
 
