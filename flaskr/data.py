@@ -17,10 +17,9 @@ def insert_user(u):
 
 def get_user(usuario, password):
     db = get_db()
-    return  db.execute(
+    return db.execute(
             'SELECT * FROM usuarios WHERE usuario = ?', (usuario,)
         ).fetchone()
-
     
 def get_user_by_cuit(cuit):
     return get_db().execute(

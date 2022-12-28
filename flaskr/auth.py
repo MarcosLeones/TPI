@@ -3,11 +3,16 @@ import functools
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import check_password_hash
 from flaskr.entities import Usuario
 from flaskr.data import insert_user, get_user, get_user_by_cuit
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
+
+
+@bp.route('/hello', methods=['GET']) #Piloto test
+def hello_world():
+    return 'Hello, World!'
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
@@ -57,14 +62,13 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-
         user = get_user(username, password)
 
         error = None
         if user is None:
-            error = 'Incorrect username.'
+            error = 'Usuario incorrecto.'
         elif not check_password_hash(user['password'], password):
-            error = 'Incorrect password.'
+            error = 'Password incorrecto.'
 
         if error is None:
             session.clear()
